@@ -8,16 +8,18 @@ public class User : Entity
     public string Name { get; set; } = string.Empty;
     public Email Email { get; set; } = null!;
     public Password Password { get; set; } = null!;
+    public string Image { get; set; } = string.Empty;
 
     public User() 
     {
     }
 
-    public User(string name, Email email, Password password)
+    public User(string name, Email email, Password password, string image)
     {
         Name = name;
         Email = email;
         Password = password;
+        Image = image;
 
         AddNotifications(email, password);
     }

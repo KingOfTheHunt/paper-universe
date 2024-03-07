@@ -7,7 +7,7 @@ public class Verification : ValueObject
     public string Code { get; } = Guid.NewGuid().ToString("N")[..6].ToUpper();
     public DateTime? ExpiresAt { get; private set; } = DateTime.UtcNow.AddMinutes(5);
     public DateTime? VerifiedAt { get; private set; } = null;
-    public bool Active => ExpiresAt == null && VerifiedAt != null;
+    public bool IsActive => ExpiresAt == null && VerifiedAt != null;
 
     public Verification()
     {

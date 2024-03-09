@@ -56,6 +56,6 @@ public class Handler : IRequestHandler<Request, Response>
         await _service.SendVerificationEmailAsync();
         #endregion
 
-        return new Response(201, "Cadastro realizado com sucesso");
+        return new Response(201, "Cadastro realizado com sucesso.");
     }
 }

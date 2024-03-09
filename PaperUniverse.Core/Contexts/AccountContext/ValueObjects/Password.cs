@@ -17,7 +17,7 @@ public class Password : ValueObject
     {
         AddNotifications(new Contract<Password>()
             .Requires()
-            .IsNullOrEmpty(password, "Password", "A senha não pode ser nula ou vazia.")
+            .IsNotNullOrEmpty(password, "Password", "A senha não pode ser nula ou vazia.")
             .IsGreaterOrEqualsThan(password.Length, 6, "Password", "A senha deve ter no mínimo 6 caracteres.")
             .IsLowerOrEqualsThan(password.Length, 20, "Password", "A senha deve ter no máximo 20 caracteres."));
         

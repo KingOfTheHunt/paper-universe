@@ -10,16 +10,15 @@ public class User : Entity
     public Password Password { get; set; } = null!;
     public string Image { get; set; } = string.Empty;
 
-    public User() 
+    protected User() 
     {
     }
 
-    public User(string name, Email email, Password password, string image)
+    public User(string name, Email email, Password password)
     {
         Name = name;
         Email = email;
         Password = password;
-        Image = image;
 
         AddNotifications(email, password);
     }

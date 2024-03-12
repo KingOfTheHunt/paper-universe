@@ -15,7 +15,7 @@ namespace PaperUniverse.Infra.Contexts.AccountContext.Mappings
             builder.Property(x => x.Name)
                 .IsRequired()
                 .HasColumnName("Name")
-                .HasColumnType("NAVRCHAR")
+                .HasColumnType("NVARCHAR")
                 .HasMaxLength(80);
 
             builder.Property(x => x.Image)
@@ -23,6 +23,8 @@ namespace PaperUniverse.Infra.Contexts.AccountContext.Mappings
                 .HasColumnName("Image")
                 .HasColumnType("VARCHAR")
                 .HasMaxLength(255);
+            
+            builder.Ignore(x => x.Notifications);
 
             builder.OwnsOne(x => x.Email)
                 .Property(x => x.Address)
@@ -38,6 +40,9 @@ namespace PaperUniverse.Infra.Contexts.AccountContext.Mappings
                 .HasColumnName("EmailVerificationCode")
                 .HasColumnType("CHAR")
                 .HasMaxLength(6);
+
+            builder.OwnsOne(x => x.Email)
+                .Ignore(y => y.Notifications);
             
             builder.OwnsOne(x => x.Email)
                 .OwnsOne(y => y.Verification)
@@ -57,6 +62,10 @@ namespace PaperUniverse.Infra.Contexts.AccountContext.Mappings
                 .OwnsOne(y => y.Verification)
                 .Ignore(z => z.IsActive);
 
+            builder.OwnsOne(x => x.Email)
+                .OwnsOne(y => y.Verification)
+                .Ignore(z => z.Notifications);
+
             builder.OwnsOne(x => x.Password)
                 .Property(y => y.Hash)
                 .IsRequired()
@@ -70,6 +79,9 @@ namespace PaperUniverse.Infra.Contexts.AccountContext.Mappings
                 .HasColumnName("PasswordResetCode")
                 .HasColumnType("CHAR")
                 .HasMaxLength(8);
+
+            builder.OwnsOne(x => x.Password)
+                .Ignore(y => y.Notifications);
         }
     }
 }

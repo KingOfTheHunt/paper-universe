@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperUniverse.Infra", "Pape
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperUniverse.Tests", "PaperUniverse.Tests\PaperUniverse.Tests.csproj", "{4992A873-3C9A-4B2D-BD95-3DE7590BCB2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperUniverse.API", "PaperUniverse.API\PaperUniverse.API.csproj", "{40253768-E4FD-479A-A9F2-A61716DB4FE5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{4992A873-3C9A-4B2D-BD95-3DE7590BCB2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4992A873-3C9A-4B2D-BD95-3DE7590BCB2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4992A873-3C9A-4B2D-BD95-3DE7590BCB2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40253768-E4FD-479A-A9F2-A61716DB4FE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40253768-E4FD-479A-A9F2-A61716DB4FE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40253768-E4FD-479A-A9F2-A61716DB4FE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40253768-E4FD-479A-A9F2-A61716DB4FE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

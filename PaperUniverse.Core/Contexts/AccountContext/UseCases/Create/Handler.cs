@@ -53,9 +53,9 @@ public class Handler : IRequestHandler<Request, Response>
         #endregion
 
         #region Envia o e-mail com o código de ativação
-        await _service.SendVerificationEmailAsync();
+        await _service.SendVerificationEmailAsync(user);
         #endregion
 
-        return new Response(201, "Cadastro realizado com sucesso.");
+        return new Response(user.Id, 201, "Cadastro realizado com sucesso.");
     }
 }

@@ -4,7 +4,7 @@ namespace PaperUniverse.Core.Contexts.AccountContext.UseCases.Create;
 
 public class Response : SharedContext.UseCases.Response
 {
-    public Guid Id { get; }
+    public ResponseData? Data { get; set; }
 
     public Response(int status, string message, IEnumerable<Notification>? notifications = null)
     {
@@ -13,10 +13,12 @@ public class Response : SharedContext.UseCases.Response
         Notifications = notifications;
     }
 
-    public Response(Guid id, int status, string message)
+    public Response(int status, string message, ResponseData data)
     {
-        Id = id;
         Status = status;
         Message = message;
+        Data = data;
     }
 }
+
+public record ResponseData(Guid Id);

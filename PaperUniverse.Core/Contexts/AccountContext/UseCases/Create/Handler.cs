@@ -44,6 +44,7 @@ public class Handler : IRequestHandler<Request, Response>
         #region Persiste o usuário no banco
         try
         {
+            user.Image = $"https://api.multiavatar.com/{user.Id}.svg";
             await _repository.SaveAsync(user, cancellationToken);
         }
         catch (Exception)
@@ -56,6 +57,6 @@ public class Handler : IRequestHandler<Request, Response>
         await _service.SendVerificationEmailAsync(user);
         #endregion
 
-        return new Response(user.Id, 201, "Cadastro realizado com sucesso.");
+        return new Response(201, "Cadastro realizado com sucesso.", new ResponseData(user.Id));
     }
 }

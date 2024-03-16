@@ -1,4 +1,5 @@
 using MediatR;
+using PaperUniverse.Core.Contexts.AccountContext.Entities;
 using PaperUniverse.Core.Contexts.AccountContext.UseCases.Verify.Contracts;
 using PaperUniverse.Core.Contexts.AccountContext.ValueObjects;
 
@@ -24,11 +25,21 @@ public class Handler : IRequestHandler<Request, Response>
 
         #region Gera o value object e verifica se ele existe no banco
         var email = new Email(request.Email);
-
-        var user = await _repository.GetUserByEmailAsync(email.Address);
-
-        if (user == null)
-            return new Response(404, "O e-mail informado não foi encontrado no banco de dados.");
+        User? user;
+        
+        try
+        {
+            user = await _repository.GetUserByEmailAsync(email.Address);
+            
+            if (user == null)
+                return new Response(404, "O e-mail informado não foi encontrado no banco de dados.");
+        }
+        catch (Exception)
+        {
+            return new Response(500, "Erro ao buscar o usuário no banco.");
+        }
+       
+        
         #endregion
 
         #region Valida o código de verificação
@@ -39,7 +50,14 @@ public class Handler : IRequestHandler<Request, Response>
         #endregion
 
         #region Salva as alterações
-        await _repository.Save(user);
+        try
+        {
+            await _repository.Save(user);
+        }
+        catch (Exception)
+        {
+            return new Response(500, "Erro ao salvar as alterações.");
+        }
         #endregion
 
         return new Response(200, "Conta verificada com sucesso!");

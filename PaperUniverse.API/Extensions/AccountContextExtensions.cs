@@ -1,4 +1,5 @@
 using MediatR;
+using PaperUniverse.API.Extensions;
 
 namespace PaperUniverse.API.Extensions;
 
@@ -24,6 +25,13 @@ public static class AccountContextExtensions
             PaperUniverse.Infra.Contexts.AccountContext.UseCases.Verify.Repository
         >();
         #endregion
+
+        #region Authenticate
+        builder.Services.AddTransient<
+            PaperUniverse.Core.Contexts.AccountContext.UseCases.Authenticate.Contracts.IRepository,
+            PaperUniverse.Infra.Contexts.AccountContext.UseCases.Authenticate.Repository
+        >();
+        #endregion
     }
 
     public static void MapAccountContextEndpoints(this WebApplication app)
@@ -38,7 +46,7 @@ public static class AccountContextExtensions
             var result = await handler.Handle(request, new CancellationToken());
 
             if (result.Success)
-                return Results.Created($"api/v1/account/{result.Id}", result);
+                return Results.Created($"api/v1/account/{result.Data?.Id}", result);
 
             return Results.Json(result, statusCode: result.Status);
         });
@@ -57,6 +65,27 @@ public static class AccountContextExtensions
                 return Results.Ok(result);
 
             return Results.Json(result, statusCode: result.Status);
+        });
+        #endregion
+
+        #region Authenticate
+        app.MapPost("api/v1/account/authenticate", async (
+            PaperUniverse.Core.Contexts.AccountContext.UseCases.Authenticate.Request request,
+            IRequestHandler<PaperUniverse.Core.Contexts.AccountContext.UseCases.Authenticate.Request,
+            PaperUniverse.Core.Contexts.AccountContext.UseCases.Authenticate.Response> handler
+        ) => 
+        {
+            var result = await handler.Handle(request, new CancellationToken());
+
+            if (result.Success == false)
+                return Results.Json(result, statusCode: result.Status);
+
+            if (result.Data == null)
+                return Results.Json(result, statusCode: 500);
+
+            result.Data.Token = JwtExtensions.Generate(result.Data);
+
+            return Results.Ok(result);
         });
         #endregion
     }

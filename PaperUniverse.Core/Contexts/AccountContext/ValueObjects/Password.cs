@@ -27,8 +27,6 @@ public class Password : ValueObject
 
     public bool Challenge(string password)
     {
-        var passwordHash = PasswordHasher.Hash(password);
-
-        return PasswordHasher.Verify(Hash, passwordHash);
+        return PasswordHasher.Verify(Hash, password);
     }
 }

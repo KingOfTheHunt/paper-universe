@@ -10,7 +10,7 @@ public class Service : IService
 {
     public async Task SendVerificationEmailAsync(User user)
     {
-        var smtpClient = new SmtpClient(Configuration.Smtp.Server, Configuration.Smtp.Port)
+        var smtpClient = new SmtpClient(Configuration.Smtp.Host, Configuration.Smtp.Port)
         {
             UseDefaultCredentials = false,
             Credentials = new NetworkCredential(Configuration.Smtp.Username,

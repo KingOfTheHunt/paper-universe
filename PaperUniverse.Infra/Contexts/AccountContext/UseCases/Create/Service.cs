@@ -1,8 +1,6 @@
-using System.Net;
-using System.Net.Mail;
-using PaperUniverse.Core;
 using PaperUniverse.Core.Contexts.AccountContext.Entities;
 using PaperUniverse.Core.Contexts.AccountContext.UseCases.Create.Contracts;
+using PaperUniverse.Infra.Helpers;
 
 namespace PaperUniverse.Infra.Contexts.AccountContext.UseCases.Create;
 
@@ -10,20 +8,15 @@ public class Service : IService
 {
     public async Task SendVerificationEmailAsync(User user)
     {
-        var smtpClient = new SmtpClient(Configuration.Smtp.Host, Configuration.Smtp.Port)
-        {
-            UseDefaultCredentials = false,
-            Credentials = new NetworkCredential(Configuration.Smtp.Username,
-            Configuration.Smtp.Password),
-            EnableSsl = true
-        };
+        var smtpClient = MailHelper.GetSmtp();
 
-        var mail = new MailMessage();
-        mail.From = new MailAddress(Configuration.Smtp.Username);
-        mail.To.Add(user.Email.Address);
-        mail.Subject = "Código de ativação";
-        mail.Body = $"O seu código de ativação é {user.Email.Verification.Code}";
+        var subject = "Código de ativação";
+        var body = @$"Seja bem vindo, {user.Name}!
+            <br /> O seu código de ativação é <strong>{user.Email.Verification.Code}</strong>
+            <br /> O seu código de ativação expira em cinco minutos.";
 
+        var mail = MailHelper.CreateMailMessage(user.Email.Address, subject, body);
+        
         await smtpClient.SendMailAsync(mail);
     }
 }

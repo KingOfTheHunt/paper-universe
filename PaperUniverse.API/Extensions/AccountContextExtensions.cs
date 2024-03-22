@@ -32,6 +32,17 @@ public static class AccountContextExtensions
             PaperUniverse.Infra.Contexts.AccountContext.UseCases.Authenticate.Repository
         >();
         #endregion
+
+        #region Resend Verification
+        builder.Services.AddTransient<
+            Core.Contexts.AccountContext.UseCases.ResendVerification.Contracts.IRepository,
+            Infra.Contexts.AccountContext.UseCases.ResendVerification.Repository
+        >();
+        builder.Services.AddTransient<
+            Core.Contexts.AccountContext.UseCases.ResendVerification.Contracts.IService,
+            Infra.Contexts.AccountContext.UseCases.ResendVerification.Service
+        >();
+        #endregion
     }
 
     public static void MapAccountContextEndpoints(this WebApplication app)
@@ -86,6 +97,22 @@ public static class AccountContextExtensions
             result.Data.Token = JwtExtensions.Generate(result.Data);
 
             return Results.Ok(result);
+        });
+        #endregion
+
+        #region Resend Verification
+        app.MapPost("api/v1/account/resend-verification", async (
+            Core.Contexts.AccountContext.UseCases.ResendVerification.Request request,
+            IRequestHandler<Core.Contexts.AccountContext.UseCases.ResendVerification.Request,
+                Core.Contexts.AccountContext.UseCases.ResendVerification.Response> handler
+        ) => 
+        {
+            var result = await handler.Handle(request, new CancellationToken());
+
+            if (result.Success)
+                return Results.Ok(result);
+            
+            return Results.Json(result, statusCode: result.Status);
         });
         #endregion
     }

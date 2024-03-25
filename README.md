@@ -11,11 +11,12 @@ Paper Universe é uma API de lista de leitura feita com C# e ASP.NET, e com insp
 - [x]  Verificar a conta
 - [x]  Autenticar o usuário
 - [x]  Reenviar o código de verificação
-- [ ]  Mostrar os dados da conta
+- [x]  Mostrar os dados da conta
 - [ ]  Atualizar a senha
 - [ ]  Resetar a senha
 - [ ]  Atualizar o e-mail
 ## Stack utilizada
 
 **Back-end:** C#, ASP.NET
+**Banco de dados**: SQL Server
 

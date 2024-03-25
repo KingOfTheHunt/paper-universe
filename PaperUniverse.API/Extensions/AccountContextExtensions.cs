@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using PaperUniverse.API.Extensions;
 
 namespace PaperUniverse.API.Extensions;
@@ -41,6 +43,13 @@ public static class AccountContextExtensions
         builder.Services.AddTransient<
             Core.Contexts.AccountContext.UseCases.ResendVerification.Contracts.IService,
             Infra.Contexts.AccountContext.UseCases.ResendVerification.Service
+        >();
+        #endregion
+
+        #region Details
+        builder.Services.AddScoped<
+            Core.Contexts.AccountContext.UseCases.Details.Contracts.IRepository,
+            Infra.Contexts.AccountContext.UseCases.Details.Repository
         >();
         #endregion
     }
@@ -104,7 +113,7 @@ public static class AccountContextExtensions
         app.MapPost("api/v1/account/resend-verification", async (
             Core.Contexts.AccountContext.UseCases.ResendVerification.Request request,
             IRequestHandler<Core.Contexts.AccountContext.UseCases.ResendVerification.Request,
-                Core.Contexts.AccountContext.UseCases.ResendVerification.Response> handler
+            Core.Contexts.AccountContext.UseCases.ResendVerification.Response> handler
         ) => 
         {
             var result = await handler.Handle(request, new CancellationToken());
@@ -114,6 +123,28 @@ public static class AccountContextExtensions
             
             return Results.Json(result, statusCode: result.Status);
         });
+        #endregion
+
+        #region Details
+        app.MapGet("api/v1/account/details", async (
+            HttpContext httpContext,
+            IRequestHandler<Core.Contexts.AccountContext.UseCases.Details.Request, 
+            Core.Contexts.AccountContext.UseCases.Details.Response> handler
+        ) => 
+        {
+            var email = httpContext.User.Identity?.Name;
+            var request = new Core.Contexts.AccountContext.UseCases.Details.Request 
+            {
+                Email = email ?? string.Empty
+            };
+
+            var result = await handler.Handle(request, new CancellationToken());
+
+            if (result.Success)
+                return Results.Ok(result);
+
+            return Results.Json(result, statusCode: result.Status);
+        }).RequireAuthorization();
         #endregion
     }
 }

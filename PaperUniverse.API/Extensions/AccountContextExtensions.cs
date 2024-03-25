@@ -35,7 +35,7 @@ public static class AccountContextExtensions
         >();
         #endregion
 
-        #region Resend Verification
+        #region Resend verification
         builder.Services.AddTransient<
             Core.Contexts.AccountContext.UseCases.ResendVerification.Contracts.IRepository,
             Infra.Contexts.AccountContext.UseCases.ResendVerification.Repository
@@ -50,6 +50,13 @@ public static class AccountContextExtensions
         builder.Services.AddScoped<
             Core.Contexts.AccountContext.UseCases.Details.Contracts.IRepository,
             Infra.Contexts.AccountContext.UseCases.Details.Repository
+        >();
+        #endregion
+
+        #region Update password
+        builder.Services.AddTransient<
+            Core.Contexts.AccountContext.UseCases.UpdatePassword.Contracts.IRepository,
+            Infra.Contexts.AccountContext.UseCases.UpdatePassword.Repository
         >();
         #endregion
     }
@@ -137,6 +144,25 @@ public static class AccountContextExtensions
             {
                 Email = email ?? string.Empty
             };
+
+            var result = await handler.Handle(request, new CancellationToken());
+
+            if (result.Success)
+                return Results.Ok(result);
+
+            return Results.Json(result, statusCode: result.Status);
+        }).RequireAuthorization();
+        #endregion
+
+        #region Update password
+        app.MapPut("api/v1/account/update-password", async (
+            HttpContext httpContext,
+            Core.Contexts.AccountContext.UseCases.UpdatePassword.Request request,
+            IRequestHandler<Core.Contexts.AccountContext.UseCases.UpdatePassword.Request,
+            Core.Contexts.AccountContext.UseCases.UpdatePassword.Response> handler
+        ) => 
+        {
+            request.Email = httpContext.User.Identity?.Name ?? string.Empty;
 
             var result = await handler.Handle(request, new CancellationToken());
 

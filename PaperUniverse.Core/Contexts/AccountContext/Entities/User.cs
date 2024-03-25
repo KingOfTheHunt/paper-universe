@@ -26,7 +26,7 @@ public class User : Entity
     public void UpdateEmail(Email email) => 
         Email = email;
 
-    public void ChangePassword(string plainTextPassword)
+    public void UpdatePassword(string plainTextPassword)
     {
         var password = new Password(plainTextPassword);
         Password = password;

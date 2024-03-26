@@ -59,6 +59,17 @@ public static class AccountContextExtensions
             Infra.Contexts.AccountContext.UseCases.UpdatePassword.Repository
         >();
         #endregion
+
+        #region Send reset code
+        builder.Services.AddTransient<
+            Core.Contexts.AccountContext.UseCases.SendResetPasswordCode.Contracts.IRepository,
+            Infra.Contexts.AccountContext.UseCases.SendResetPasswordCode.Repository
+        >();
+        builder.Services.AddTransient<
+            Core.Contexts.AccountContext.UseCases.SendResetPasswordCode.Contracts.IService,
+            Infra.Contexts.AccountContext.UseCases.SendResetPasswordCode.Service
+        >();
+        #endregion
     }
 
     public static void MapAccountContextEndpoints(this WebApplication app)
@@ -171,6 +182,22 @@ public static class AccountContextExtensions
 
             return Results.Json(result, statusCode: result.Status);
         }).RequireAuthorization();
+        #endregion
+
+        #region Send reset code
+        app.MapPost("api/v1/account/send-reset-code", async (
+            Core.Contexts.AccountContext.UseCases.SendResetPasswordCode.Request request,
+            IRequestHandler<Core.Contexts.AccountContext.UseCases.SendResetPasswordCode.Request,
+            Core.Contexts.AccountContext.UseCases.SendResetPasswordCode.Response> handler
+        ) => 
+        {
+            var result = await handler.Handle(request, new CancellationToken());
+
+            if (result.Success)
+                return Results.Ok(result);
+
+            return Results.Json(result, statusCode: result.Status);
+        });
         #endregion
     }
 }

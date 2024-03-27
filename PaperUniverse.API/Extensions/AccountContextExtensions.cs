@@ -70,6 +70,13 @@ public static class AccountContextExtensions
             Infra.Contexts.AccountContext.UseCases.SendResetPasswordCode.Service
         >();
         #endregion
+
+        #region Reset password
+        builder.Services.AddTransient<
+            Core.Contexts.AccountContext.UseCases.ResetPassword.Contracts.IRepository,
+            Infra.Contexts.AccountContext.UseCases.ResetPassword.Repository
+        >();
+        #endregion
     }
 
     public static void MapAccountContextEndpoints(this WebApplication app)
@@ -189,6 +196,22 @@ public static class AccountContextExtensions
             Core.Contexts.AccountContext.UseCases.SendResetPasswordCode.Request request,
             IRequestHandler<Core.Contexts.AccountContext.UseCases.SendResetPasswordCode.Request,
             Core.Contexts.AccountContext.UseCases.SendResetPasswordCode.Response> handler
+        ) => 
+        {
+            var result = await handler.Handle(request, new CancellationToken());
+
+            if (result.Success)
+                return Results.Ok(result);
+
+            return Results.Json(result, statusCode: result.Status);
+        });
+        #endregion
+
+        #region Reset password
+        app.MapPut("api/v1/account/reset-password", async (
+            Core.Contexts.AccountContext.UseCases.ResetPassword.Request request,
+            IRequestHandler<Core.Contexts.AccountContext.UseCases.ResetPassword.Request,
+            Core.Contexts.AccountContext.UseCases.ResetPassword.Response> handler
         ) => 
         {
             var result = await handler.Handle(request, new CancellationToken());
